@@ -1,0 +1,297 @@
+{
+  "test_case": {
+    "title": "Multi-layer M3/M4 motor disassembly",
+    "situation": "The external M4 cover is followed by an M3 bearing plate and a target rotor.",
+    "expected_outcome": "success"
+  },
+  "stream_schema_version": "1.0",
+  "name": "motor_stream_01_multilayer_m3_m4",
+  "expected_success": true,
+  "action_library": "../generic_disassembly_action_library.json",
+  "initial_state": {
+    "schema_version": "2.0",
+    "assembly": {
+      "id": "motor_stream_01_multilayer_m3_m4",
+      "type": "simplified_pmsm_motor"
+    },
+    "components": {
+      "housing": {
+        "type": "housing",
+        "status": "installed",
+        "accessible": true,
+        "target": false
+      }
+    },
+    "connections": {},
+    "tools": {
+      "inspection_camera": {
+        "type": "sensor",
+        "capabilities": [
+          "inspect"
+        ],
+        "available": true
+      },
+      "hex_driver_m4": {
+        "type": "driver",
+        "capabilities": [
+          "unscrew"
+        ],
+        "thread_sizes": [
+          "M4"
+        ],
+        "drive_types": [
+          "hex"
+        ],
+        "available": true
+      },
+      "phillips_driver_m3": {
+        "type": "driver",
+        "capabilities": [
+          "unscrew"
+        ],
+        "thread_sizes": [
+          "M3"
+        ],
+        "drive_types": [
+          "phillips"
+        ],
+        "available": true
+      },
+      "parallel_gripper": {
+        "type": "gripper",
+        "capabilities": [
+          "grasp_and_remove",
+          "grasp_and_place"
+        ],
+        "available": true
+      },
+      "rotor_puller": {
+        "type": "puller",
+        "capabilities": [
+          "pull"
+        ],
+        "component_types": [
+          "rotor"
+        ],
+        "available": true
+      }
+    },
+    "robot": {
+      "mounted_tool": "inspection_camera"
+    }
+  },
+  "goal": {
+    "components": {
+      "rotor": {
+        "status": "collected"
+      }
+    }
+  },
+  "observation_stream": [
+    {
+      "sequence": 1,
+      "observation_id": "observation_001",
+      "source": "simulated_camera",
+      "note": "The first observation contains only the external end cover and its visible fasteners.",
+      "updates": {
+        "components": {
+          "end_cover": {
+            "type": "cover",
+            "status": "installed",
+            "accessible": true,
+            "target": false
+          }
+        },
+        "connections": {
+          "end_cover_screws": {
+            "type": "threaded_fastener",
+            "connects": [
+              "end_cover",
+              "housing"
+            ],
+            "retaining": true,
+            "quantity": 4,
+            "thread_size": "M4",
+            "drive_type": "hex",
+            "status": "installed",
+            "accessible": true
+          }
+        }
+      }
+    },
+    {
+      "sequence": 2,
+      "observation_id": "observation_002",
+      "source": "simulated_robot_feedback",
+      "note": "M4 hex driver mounting is confirmed.",
+      "updates": {
+        "robot": {
+          "mounted_tool": "hex_driver_m4"
+        }
+      }
+    },
+    {
+      "sequence": 3,
+      "observation_id": "observation_003",
+      "source": "simulated_camera",
+      "note": "End-cover screw removal is confirmed.",
+      "updates": {
+        "connections": {
+          "end_cover_screws": {
+            "status": "removed"
+          }
+        }
+      }
+    },
+    {
+      "sequence": 4,
+      "observation_id": "observation_004",
+      "source": "simulated_robot_feedback",
+      "note": "Cover gripper mounting is confirmed.",
+      "updates": {
+        "robot": {
+          "mounted_tool": "parallel_gripper"
+        }
+      }
+    },
+    {
+      "sequence": 5,
+      "observation_id": "observation_005",
+      "source": "simulated_camera",
+      "note": "Cover removal reveals the bearing plate and M3 screws.",
+      "updates": {
+        "components": {
+          "bearing_plate": {
+            "type": "plate",
+            "status": "installed",
+            "accessible": true,
+            "target": false
+          },
+          "end_cover": {
+            "status": "removed",
+            "accessible": false
+          }
+        },
+        "connections": {
+          "bearing_plate_screws": {
+            "type": "threaded_fastener",
+            "connects": [
+              "bearing_plate",
+              "housing"
+            ],
+            "retaining": true,
+            "quantity": 3,
+            "thread_size": "M3",
+            "drive_type": "phillips",
+            "status": "installed",
+            "accessible": true
+          }
+        }
+      }
+    },
+    {
+      "sequence": 6,
+      "observation_id": "observation_006",
+      "source": "simulated_robot_feedback",
+      "updates": {
+        "robot": {
+          "mounted_tool": "phillips_driver_m3"
+        }
+      },
+      "note": "M3 Phillips driver mounting is confirmed."
+    },
+    {
+      "sequence": 7,
+      "observation_id": "observation_007",
+      "source": "simulated_camera",
+      "updates": {
+        "connections": {
+          "bearing_plate_screws": {
+            "status": "removed"
+          }
+        }
+      },
+      "note": "Bearing-plate screw removal is confirmed."
+    },
+    {
+      "sequence": 8,
+      "observation_id": "observation_008",
+      "source": "simulated_robot_feedback",
+      "updates": {
+        "robot": {
+          "mounted_tool": "parallel_gripper"
+        }
+      },
+      "note": "Bearing-plate gripper mounting is confirmed."
+    },
+    {
+      "sequence": 9,
+      "observation_id": "observation_009",
+      "source": "simulated_camera",
+      "note": "Bearing-plate removal reveals the target rotor.",
+      "updates": {
+        "components": {
+          "rotor": {
+            "type": "rotor",
+            "status": "installed",
+            "accessible": true,
+            "target": true
+          },
+          "bearing_plate": {
+            "status": "removed",
+            "accessible": false
+          }
+        }
+      }
+    },
+    {
+      "sequence": 10,
+      "observation_id": "observation_010",
+      "source": "simulated_robot_feedback",
+      "updates": {
+        "robot": {
+          "mounted_tool": "rotor_puller"
+        }
+      },
+      "note": "Rotor puller mounting is confirmed."
+    },
+    {
+      "sequence": 11,
+      "observation_id": "observation_011",
+      "source": "simulated_camera",
+      "updates": {
+        "components": {
+          "rotor": {
+            "status": "removed",
+            "accessible": false
+          }
+        }
+      },
+      "note": "Rotor extraction is confirmed."
+    },
+    {
+      "sequence": 12,
+      "observation_id": "observation_012",
+      "source": "simulated_robot_feedback",
+      "updates": {
+        "robot": {
+          "mounted_tool": "parallel_gripper"
+        }
+      },
+      "note": "Collection gripper mounting is confirmed."
+    },
+    {
+      "sequence": 13,
+      "observation_id": "observation_013",
+      "source": "simulated_camera",
+      "updates": {
+        "components": {
+          "rotor": {
+            "status": "collected"
+          }
+        }
+      },
+      "note": "Confirms the predicted collection result after the final selected action."
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "test_case": {
+    "id": "motor_case_08_hybrid_fastener_adhesive",
+    "title": "Cover with screws and adhesive",
+    "situation": "The cover has both M4 hex screws and an adhesive joint; both mechanisms must be released.",
+    "test_focus": "Checks multiple simultaneous retaining connections and two specialised tools before removal.",
+    "expected_outcome": "success",
+    "required_action_templates": [
+      "remove_fastener",
+      "debond_joint",
+      "remove_component",
+      "pull_component",
+      "collect_component"
+    ]
+  },
+  "schema_version": "2.0",
+  "assembly": {
+    "id": "motor_case_08_hybrid_fastener_adhesive",
+    "type": "simplified_motor"
+  },
+  "components": {
+    "housing": {
+      "type": "housing",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "end_cover": {
+      "type": "cover",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "rotor": {
+      "type": "rotor",
+      "status": "installed",
+      "accessible": false,
+      "blocked_by": [
+        "end_cover"
+      ],
+      "target": true
+    }
+  },
+  "connections": {
+    "cover_fasteners": {
+      "type": "threaded_fastener",
+      "connects": [
+        "end_cover",
+        "housing"
+      ],
+      "retaining": true,
+      "status": "installed",
+      "accessible": true,
+      "quantity": 4,
+      "thread_size": "M4",
+      "drive_type": "hex"
+    },
+    "cover_adhesive": {
+      "type": "adhesive_joint",
+      "connects": [
+        "end_cover",
+        "housing"
+      ],
+      "retaining": true,
+      "status": "installed",
+      "accessible": true
+    }
+  },
+  "tools": {
+    "inspection_camera": {
+      "type": "sensor",
+      "capabilities": [
+        "inspect"
+      ],
+      "available": true
+    },
+    "parallel_gripper": {
+      "type": "gripper",
+      "capabilities": [
+        "grasp_and_remove",
+        "grasp_and_place"
+      ],
+      "available": true
+    },
+    "rotor_puller": {
+      "type": "puller",
+      "capabilities": [
+        "pull"
+      ],
+      "component_types": [
+        "rotor"
+      ],
+      "available": true
+    },
+    "hex_driver_m4": {
+      "type": "driver",
+      "capabilities": [
+        "unscrew"
+      ],
+      "available": true,
+      "thread_sizes": [
+        "M4"
+      ],
+      "drive_types": [
+        "hex"
+      ]
+    },
+    "controlled_heat_tool": {
+      "type": "thermal_tool",
+      "capabilities": [
+        "debond"
+      ],
+      "available": true
+    }
+  },
+  "robot": {
+    "mounted_tool": "inspection_camera"
+  }
+}

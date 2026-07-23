@@ -1,0 +1,101 @@
+{
+  "test_case": {
+    "id": "motor_case_01_m4_hex_fasteners",
+    "title": "M4 hex-fastened motor cover",
+    "situation": "A motor end cover is retained by four accessible M4 hex screws.",
+    "test_focus": "Checks reusable fastener removal, M4/hex tool matching, cover removal, rotor extraction and collection.",
+    "expected_outcome": "success",
+    "required_action_templates": [
+      "remove_fastener",
+      "remove_component",
+      "pull_component",
+      "collect_component"
+    ]
+  },
+  "schema_version": "2.0",
+  "assembly": {
+    "id": "motor_case_01_m4_hex_fasteners",
+    "type": "simplified_motor"
+  },
+  "components": {
+    "housing": {
+      "type": "housing",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "end_cover": {
+      "type": "cover",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "rotor": {
+      "type": "rotor",
+      "status": "installed",
+      "accessible": false,
+      "blocked_by": [
+        "end_cover"
+      ],
+      "target": true
+    }
+  },
+  "connections": {
+    "cover_fasteners": {
+      "type": "threaded_fastener",
+      "connects": [
+        "end_cover",
+        "housing"
+      ],
+      "retaining": true,
+      "status": "installed",
+      "accessible": true,
+      "quantity": 4,
+      "thread_size": "M4",
+      "drive_type": "hex"
+    }
+  },
+  "tools": {
+    "inspection_camera": {
+      "type": "sensor",
+      "capabilities": [
+        "inspect"
+      ],
+      "available": true
+    },
+    "parallel_gripper": {
+      "type": "gripper",
+      "capabilities": [
+        "grasp_and_remove",
+        "grasp_and_place"
+      ],
+      "available": true
+    },
+    "rotor_puller": {
+      "type": "puller",
+      "capabilities": [
+        "pull"
+      ],
+      "component_types": [
+        "rotor"
+      ],
+      "available": true
+    },
+    "hex_driver_m4": {
+      "type": "driver",
+      "capabilities": [
+        "unscrew"
+      ],
+      "available": true,
+      "thread_sizes": [
+        "M4"
+      ],
+      "drive_types": [
+        "hex"
+      ]
+    }
+  },
+  "robot": {
+    "mounted_tool": "inspection_camera"
+  }
+}

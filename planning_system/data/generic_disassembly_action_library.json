@@ -1,0 +1,548 @@
+{
+  "schema_version": "1.0",
+  "name": "generic_disassembly_action_library",
+  "actions": [
+    {
+      "name": "change_tool",
+      "description": "Mount {tool} for the next disassembly operation.",
+      "parameters": {
+        "tool": {
+          "source": "tools"
+        }
+      },
+      "preconditions": [
+        {
+          "subject": "$tool",
+          "field": "available",
+          "operator": "equals",
+          "value": true
+        }
+      ],
+      "effects": [
+        {
+          "subject": "$robot",
+          "field": "mounted_tool",
+          "operation": "set_binding",
+          "value": "$tool"
+        }
+      ],
+      "cost": 1.0,
+      "risk": 0.02,
+      "expected_time": 2.0
+    },
+    {
+      "name": "inspect_component",
+      "description": "Inspect {component} using {tool} and record that its visible state is known.",
+      "parameters": {
+        "component": {
+          "source": "components",
+          "where": {
+            "inspection_required": true
+          }
+        },
+        "tool": {
+          "source": "tools"
+        }
+      },
+      "preconditions": [
+        {
+          "subject": "$component",
+          "field": "inspection_required",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "subject": "$component",
+          "field": "inspected",
+          "operator": "not_equals",
+          "value": true
+        },
+        {
+          "subject": "$component",
+          "field": "accessible",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "subject": "$robot",
+          "field": "mounted_tool",
+          "operator": "equals_binding",
+          "value": "$tool"
+        }
+      ],
+      "tool_requirement": {
+        "capability": "inspect"
+      },
+      "effects": [
+        {
+          "subject": "$component",
+          "field": "inspected",
+          "operation": "set",
+          "value": true
+        }
+      ],
+      "cost": 1.0,
+      "risk": 0.0,
+      "expected_time": 1.0
+    },
+    {
+      "name": "remove_fastener",
+      "description": "Remove {fastener} using the compatible tool {tool}.",
+      "parameters": {
+        "fastener": {
+          "source": "connections",
+          "type": "threaded_fastener"
+        },
+        "tool": {
+          "source": "tools"
+        }
+      },
+      "preconditions": [
+        {
+          "subject": "$fastener",
+          "field": "status",
+          "operator": "equals",
+          "value": "installed"
+        },
+        {
+          "subject": "$fastener",
+          "field": "accessible",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "subject": "$robot",
+          "field": "mounted_tool",
+          "operator": "equals_binding",
+          "value": "$tool"
+        }
+      ],
+      "tool_requirement": {
+        "capability": "unscrew",
+        "compatibility": [
+          {
+            "tool_field": "thread_sizes",
+            "must_contain_from": "$fastener.thread_size"
+          },
+          {
+            "tool_field": "drive_types",
+            "must_contain_from": "$fastener.drive_type"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "subject": "$fastener",
+          "field": "status",
+          "operation": "set",
+          "value": "removed"
+        }
+      ],
+      "cost": 2.0,
+      "risk": 0.1,
+      "expected_time": {
+        "base_seconds": 1.0,
+        "per_item_seconds": 0.8,
+        "quantity_from": "$fastener.quantity"
+      }
+    },
+    {
+      "name": "release_retainer",
+      "description": "Release retaining connection {connection} using {tool}.",
+      "parameters": {
+        "connection": {
+          "source": "connections",
+          "type_in": [
+            "clip",
+            "retaining_ring"
+          ]
+        },
+        "tool": {
+          "source": "tools"
+        }
+      },
+      "preconditions": [
+        {
+          "subject": "$connection",
+          "field": "status",
+          "operator": "equals",
+          "value": "installed"
+        },
+        {
+          "subject": "$connection",
+          "field": "accessible",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "subject": "$robot",
+          "field": "mounted_tool",
+          "operator": "equals_binding",
+          "value": "$tool"
+        }
+      ],
+      "tool_requirement": {
+        "capability": "release_retainer",
+        "compatibility": [
+          {
+            "tool_field": "connection_types",
+            "must_contain_from": "$connection.type"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "subject": "$connection",
+          "field": "status",
+          "operation": "set",
+          "value": "removed"
+        }
+      ],
+      "cost": 2.0,
+      "risk": 0.15,
+      "expected_time": 3.0
+    },
+    {
+      "name": "disconnect_connection",
+      "description": "Disconnect {connection} using {tool}.",
+      "parameters": {
+        "connection": {
+          "source": "connections",
+          "type_in": [
+            "electrical_connector",
+            "cable_connection"
+          ]
+        },
+        "tool": {
+          "source": "tools"
+        }
+      },
+      "preconditions": [
+        {
+          "subject": "$connection",
+          "field": "status",
+          "operator": "equals",
+          "value": "installed"
+        },
+        {
+          "subject": "$connection",
+          "field": "accessible",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "subject": "$robot",
+          "field": "mounted_tool",
+          "operator": "equals_binding",
+          "value": "$tool"
+        }
+      ],
+      "tool_requirement": {
+        "capability": "disconnect",
+        "compatibility": [
+          {
+            "tool_field": "connection_types",
+            "must_contain_from": "$connection.type"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "subject": "$connection",
+          "field": "status",
+          "operation": "set",
+          "value": "disconnected"
+        }
+      ],
+      "cost": 2.0,
+      "risk": 0.2,
+      "expected_time": 3.0
+    },
+    {
+      "name": "debond_joint",
+      "description": "Release adhesive joint {connection} using {tool}.",
+      "parameters": {
+        "connection": {
+          "source": "connections",
+          "type": "adhesive_joint"
+        },
+        "tool": {
+          "source": "tools"
+        }
+      },
+      "preconditions": [
+        {
+          "subject": "$connection",
+          "field": "status",
+          "operator": "equals",
+          "value": "installed"
+        },
+        {
+          "subject": "$connection",
+          "field": "accessible",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "subject": "$robot",
+          "field": "mounted_tool",
+          "operator": "equals_binding",
+          "value": "$tool"
+        }
+      ],
+      "tool_requirement": {
+        "capability": "debond"
+      },
+      "effects": [
+        {
+          "subject": "$connection",
+          "field": "status",
+          "operation": "set",
+          "value": "released"
+        }
+      ],
+      "cost": 3.0,
+      "risk": 0.25,
+      "expected_time": 5.0
+    },
+    {
+      "name": "cut_connection",
+      "description": "Cut non-reversible connection {connection} using {tool}.",
+      "parameters": {
+        "connection": {
+          "source": "connections",
+          "type_in": [
+            "rivet",
+            "welded_joint",
+            "permanent_joint"
+          ]
+        },
+        "tool": {
+          "source": "tools"
+        }
+      },
+      "preconditions": [
+        {
+          "subject": "$connection",
+          "field": "status",
+          "operator": "equals",
+          "value": "installed"
+        },
+        {
+          "subject": "$connection",
+          "field": "accessible",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "subject": "$robot",
+          "field": "mounted_tool",
+          "operator": "equals_binding",
+          "value": "$tool"
+        }
+      ],
+      "tool_requirement": {
+        "capability": "cut",
+        "compatibility": [
+          {
+            "tool_field": "connection_types",
+            "must_contain_from": "$connection.type"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "subject": "$connection",
+          "field": "status",
+          "operation": "set",
+          "value": "cut"
+        }
+      ],
+      "cost": 5.0,
+      "risk": 0.4,
+      "expected_time": 8.0
+    },
+    {
+      "name": "remove_component",
+      "description": "Remove the released component {component} using {tool}.",
+      "parameters": {
+        "component": {
+          "source": "components",
+          "type_in": [
+            "cover",
+            "plate",
+            "guard",
+            "housing_part"
+          ]
+        },
+        "tool": {
+          "source": "tools"
+        }
+      },
+      "preconditions": [
+        {
+          "subject": "$component",
+          "field": "status",
+          "operator": "equals",
+          "value": "installed"
+        },
+        {
+          "subject": "$component",
+          "field": "accessible",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "subject": "$component",
+          "operator": "has_no_installed_retaining_connections"
+        },
+        {
+          "subject": "$robot",
+          "field": "mounted_tool",
+          "operator": "equals_binding",
+          "value": "$tool"
+        }
+      ],
+      "tool_requirement": {
+        "capability": "grasp_and_remove"
+      },
+      "effects": [
+        {
+          "subject": "$component",
+          "field": "status",
+          "operation": "set",
+          "value": "removed"
+        },
+        {
+          "subject": "$component",
+          "field": "accessible",
+          "operation": "set",
+          "value": false
+        },
+        {
+          "operation": "recalculate_accessibility"
+        }
+      ],
+      "cost": 2.0,
+      "risk": 0.15,
+      "expected_time": 3.0
+    },
+    {
+      "name": "pull_component",
+      "description": "Pull the accessible component {component} using {tool}.",
+      "parameters": {
+        "component": {
+          "source": "components",
+          "type_in": [
+            "bearing",
+            "rotor",
+            "shaft",
+            "rotor_shaft_assembly"
+          ]
+        },
+        "tool": {
+          "source": "tools"
+        }
+      },
+      "preconditions": [
+        {
+          "subject": "$component",
+          "field": "status",
+          "operator": "equals",
+          "value": "installed"
+        },
+        {
+          "subject": "$component",
+          "field": "accessible",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "subject": "$component",
+          "operator": "has_no_installed_retaining_connections"
+        },
+        {
+          "subject": "$robot",
+          "field": "mounted_tool",
+          "operator": "equals_binding",
+          "value": "$tool"
+        }
+      ],
+      "tool_requirement": {
+        "capability": "pull",
+        "compatibility": [
+          {
+            "tool_field": "component_types",
+            "must_contain_from": "$component.type"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "subject": "$component",
+          "field": "status",
+          "operation": "set",
+          "value": "removed"
+        },
+        {
+          "subject": "$component",
+          "field": "accessible",
+          "operation": "set",
+          "value": false
+        },
+        {
+          "operation": "recalculate_accessibility"
+        }
+      ],
+      "cost": 4.0,
+      "risk": 0.3,
+      "expected_time": 6.0
+    },
+    {
+      "name": "collect_component",
+      "description": "Move the recovered target {component} to the collection area using {tool}.",
+      "parameters": {
+        "component": {
+          "source": "components"
+        },
+        "tool": {
+          "source": "tools"
+        }
+      },
+      "preconditions": [
+        {
+          "subject": "$component",
+          "field": "status",
+          "operator": "equals",
+          "value": "removed"
+        },
+        {
+          "subject": "$component",
+          "field": "target",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "subject": "$robot",
+          "field": "mounted_tool",
+          "operator": "equals_binding",
+          "value": "$tool"
+        }
+      ],
+      "tool_requirement": {
+        "capability": "grasp_and_place"
+      },
+      "effects": [
+        {
+          "subject": "$component",
+          "field": "status",
+          "operation": "set",
+          "value": "collected"
+        }
+      ],
+      "cost": 1.0,
+      "risk": 0.05,
+      "expected_time": 2.0
+    }
+  ]
+}

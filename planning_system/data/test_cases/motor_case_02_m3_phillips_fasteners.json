@@ -1,0 +1,101 @@
+{
+  "test_case": {
+    "id": "motor_case_02_m3_phillips_fasteners",
+    "title": "M3 Phillips-fastened motor cover",
+    "situation": "A different motor cover uses six M3 Phillips screws rather than M4 hex screws.",
+    "test_focus": "Checks that the same remove_fastener template is reused with different quantity, thread size and drive type.",
+    "expected_outcome": "success",
+    "required_action_templates": [
+      "remove_fastener",
+      "remove_component",
+      "pull_component",
+      "collect_component"
+    ]
+  },
+  "schema_version": "2.0",
+  "assembly": {
+    "id": "motor_case_02_m3_phillips_fasteners",
+    "type": "simplified_motor"
+  },
+  "components": {
+    "housing": {
+      "type": "housing",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "end_cover": {
+      "type": "cover",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "rotor": {
+      "type": "rotor",
+      "status": "installed",
+      "accessible": false,
+      "blocked_by": [
+        "end_cover"
+      ],
+      "target": true
+    }
+  },
+  "connections": {
+    "cover_fasteners": {
+      "type": "threaded_fastener",
+      "connects": [
+        "end_cover",
+        "housing"
+      ],
+      "retaining": true,
+      "status": "installed",
+      "accessible": true,
+      "quantity": 6,
+      "thread_size": "M3",
+      "drive_type": "phillips"
+    }
+  },
+  "tools": {
+    "inspection_camera": {
+      "type": "sensor",
+      "capabilities": [
+        "inspect"
+      ],
+      "available": true
+    },
+    "parallel_gripper": {
+      "type": "gripper",
+      "capabilities": [
+        "grasp_and_remove",
+        "grasp_and_place"
+      ],
+      "available": true
+    },
+    "rotor_puller": {
+      "type": "puller",
+      "capabilities": [
+        "pull"
+      ],
+      "component_types": [
+        "rotor"
+      ],
+      "available": true
+    },
+    "phillips_driver_m3": {
+      "type": "driver",
+      "capabilities": [
+        "unscrew"
+      ],
+      "available": true,
+      "thread_sizes": [
+        "M3"
+      ],
+      "drive_types": [
+        "phillips"
+      ]
+    }
+  },
+  "robot": {
+    "mounted_tool": "inspection_camera"
+  }
+}

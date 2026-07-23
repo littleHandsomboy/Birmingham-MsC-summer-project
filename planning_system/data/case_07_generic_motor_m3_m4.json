@@ -1,0 +1,128 @@
+{
+  "schema_version": "2.0",
+  "assembly": {
+    "id": "motor_01",
+    "type": "simplified_pmsm_motor"
+  },
+  "components": {
+    "housing": {
+      "type": "housing",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "end_cover": {
+      "type": "cover",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "bearing_plate": {
+      "type": "plate",
+      "status": "installed",
+      "accessible": false,
+      "blocked_by": [
+        "end_cover"
+      ],
+      "target": false
+    },
+    "rotor": {
+      "type": "rotor",
+      "status": "installed",
+      "accessible": false,
+      "blocked_by": [
+        "bearing_plate"
+      ],
+      "target": true
+    }
+  },
+  "connections": {
+    "end_cover_screws": {
+      "type": "threaded_fastener",
+      "connects": [
+        "end_cover",
+        "housing"
+      ],
+      "retaining": true,
+      "quantity": 4,
+      "thread_size": "M4",
+      "drive_type": "hex",
+      "status": "installed",
+      "accessible": true
+    },
+    "bearing_plate_screws": {
+      "type": "threaded_fastener",
+      "connects": [
+        "bearing_plate",
+        "housing"
+      ],
+      "retaining": true,
+      "quantity": 3,
+      "thread_size": "M3",
+      "drive_type": "phillips",
+      "status": "installed",
+      "accessible": false,
+      "blocked_by": [
+        "end_cover"
+      ]
+    }
+  },
+  "tools": {
+    "inspection_camera": {
+      "type": "sensor",
+      "capabilities": [
+        "inspect"
+      ],
+      "available": true
+    },
+    "hex_driver_m4": {
+      "type": "driver",
+      "capabilities": [
+        "unscrew"
+      ],
+      "thread_sizes": [
+        "M4"
+      ],
+      "drive_types": [
+        "hex"
+      ],
+      "available": true
+    },
+    "phillips_driver_m3": {
+      "type": "driver",
+      "capabilities": [
+        "unscrew"
+      ],
+      "thread_sizes": [
+        "M3"
+      ],
+      "drive_types": [
+        "phillips"
+      ],
+      "available": true
+    },
+    "parallel_gripper": {
+      "type": "gripper",
+      "capabilities": [
+        "grasp_and_remove",
+        "grasp_and_place"
+      ],
+      "available": true
+    },
+    "rotor_puller": {
+      "type": "puller",
+      "capabilities": [
+        "pull"
+      ],
+      "component_types": [
+        "rotor",
+        "shaft",
+        "rotor_shaft_assembly"
+      ],
+      "available": true
+    }
+  },
+  "robot": {
+    "mounted_tool": "inspection_camera"
+  }
+}

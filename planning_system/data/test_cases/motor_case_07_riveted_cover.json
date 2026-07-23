@@ -1,0 +1,96 @@
+{
+  "test_case": {
+    "id": "motor_case_07_riveted_cover",
+    "title": "Riveted motor cover",
+    "situation": "A non-reversible rivet connection retains the end cover.",
+    "test_focus": "Checks cut_connection, irreversible-connection handling and cutter compatibility.",
+    "expected_outcome": "success",
+    "required_action_templates": [
+      "cut_connection",
+      "remove_component",
+      "pull_component",
+      "collect_component"
+    ]
+  },
+  "schema_version": "2.0",
+  "assembly": {
+    "id": "motor_case_07_riveted_cover",
+    "type": "simplified_motor"
+  },
+  "components": {
+    "housing": {
+      "type": "housing",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "end_cover": {
+      "type": "cover",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "rotor": {
+      "type": "rotor",
+      "status": "installed",
+      "accessible": false,
+      "blocked_by": [
+        "end_cover"
+      ],
+      "target": true
+    }
+  },
+  "connections": {
+    "cover_rivets": {
+      "type": "rivet",
+      "connects": [
+        "end_cover",
+        "housing"
+      ],
+      "retaining": true,
+      "status": "installed",
+      "accessible": true,
+      "quantity": 3
+    }
+  },
+  "tools": {
+    "inspection_camera": {
+      "type": "sensor",
+      "capabilities": [
+        "inspect"
+      ],
+      "available": true
+    },
+    "parallel_gripper": {
+      "type": "gripper",
+      "capabilities": [
+        "grasp_and_remove",
+        "grasp_and_place"
+      ],
+      "available": true
+    },
+    "rotor_puller": {
+      "type": "puller",
+      "capabilities": [
+        "pull"
+      ],
+      "component_types": [
+        "rotor"
+      ],
+      "available": true
+    },
+    "rivet_cutting_tool": {
+      "type": "cutting_tool",
+      "capabilities": [
+        "cut"
+      ],
+      "available": true,
+      "connection_types": [
+        "rivet"
+      ]
+    }
+  },
+  "robot": {
+    "mounted_tool": "inspection_camera"
+  }
+}

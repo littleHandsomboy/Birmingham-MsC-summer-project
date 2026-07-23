@@ -1,0 +1,205 @@
+{
+  "test_case": {
+    "title": "Adhesive cover followed by rotor recovery",
+    "situation": "A bonded end cover must be debonded before a hidden rotor becomes visible.",
+    "expected_outcome": "success"
+  },
+  "stream_schema_version": "1.0",
+  "name": "motor_stream_06_adhesive_cover",
+  "expected_success": true,
+  "action_library": "../generic_disassembly_action_library.json",
+  "initial_state": {
+    "schema_version": "2.0",
+    "assembly": {
+      "id": "motor_stream_06_adhesive_cover",
+      "type": "simplified_motor"
+    },
+    "components": {
+      "housing": {
+        "type": "housing",
+        "status": "installed",
+        "accessible": true,
+        "target": false
+      }
+    },
+    "connections": {},
+    "tools": {
+      "inspection_camera": {
+        "type": "sensor",
+        "capabilities": [
+          "inspect"
+        ],
+        "available": true
+      },
+      "controlled_heat_tool": {
+        "type": "thermal_tool",
+        "capabilities": [
+          "debond"
+        ],
+        "available": true
+      },
+      "parallel_gripper": {
+        "type": "gripper",
+        "capabilities": [
+          "grasp_and_remove",
+          "grasp_and_place"
+        ],
+        "available": true
+      },
+      "rotor_puller": {
+        "type": "puller",
+        "capabilities": [
+          "pull"
+        ],
+        "component_types": [
+          "rotor"
+        ],
+        "available": true
+      }
+    },
+    "robot": {
+      "mounted_tool": "inspection_camera"
+    }
+  },
+  "goal": {
+    "components": {
+      "rotor": {
+        "status": "collected"
+      }
+    }
+  },
+  "observation_stream": [
+    {
+      "sequence": 1,
+      "observation_id": "external_bonded_cover",
+      "source": "simulated_camera",
+      "note": "The bonded end cover and adhesive joint are visible.",
+      "updates": {
+        "components": {
+          "end_cover": {
+            "type": "cover",
+            "status": "installed",
+            "accessible": true,
+            "target": false
+          }
+        },
+        "connections": {
+          "cover_adhesive": {
+            "type": "adhesive_joint",
+            "connects": [
+              "end_cover",
+              "housing"
+            ],
+            "retaining": true,
+            "status": "installed",
+            "accessible": true
+          }
+        }
+      }
+    },
+    {
+      "sequence": 2,
+      "observation_id": "heat_tool_mounted",
+      "source": "simulated_robot_feedback",
+      "note": "Robot feedback confirms the debonding tool is mounted.",
+      "updates": {
+        "robot": {
+          "mounted_tool": "controlled_heat_tool"
+        }
+      }
+    },
+    {
+      "sequence": 3,
+      "observation_id": "debond_confirmed",
+      "source": "simulated_camera",
+      "note": "The adhesive joint is observed as released.",
+      "updates": {
+        "connections": {
+          "cover_adhesive": {
+            "status": "released"
+          }
+        }
+      }
+    },
+    {
+      "sequence": 4,
+      "observation_id": "gripper_mounted_for_cover",
+      "source": "simulated_robot_feedback",
+      "note": "Robot feedback confirms the gripper is mounted.",
+      "updates": {
+        "robot": {
+          "mounted_tool": "parallel_gripper"
+        }
+      }
+    },
+    {
+      "sequence": 5,
+      "observation_id": "rotor_revealed",
+      "source": "simulated_camera",
+      "note": "Removing the cover reveals the target rotor.",
+      "updates": {
+        "components": {
+          "end_cover": {
+            "status": "removed",
+            "accessible": false
+          },
+          "rotor": {
+            "type": "rotor",
+            "status": "installed",
+            "accessible": true,
+            "target": true
+          }
+        }
+      }
+    },
+    {
+      "sequence": 6,
+      "observation_id": "rotor_puller_mounted",
+      "source": "simulated_robot_feedback",
+      "note": "Robot feedback confirms the rotor puller is mounted.",
+      "updates": {
+        "robot": {
+          "mounted_tool": "rotor_puller"
+        }
+      }
+    },
+    {
+      "sequence": 7,
+      "observation_id": "rotor_pull_confirmed",
+      "source": "simulated_camera",
+      "note": "The rotor is observed outside the installed position.",
+      "updates": {
+        "components": {
+          "rotor": {
+            "status": "removed",
+            "accessible": false
+          }
+        }
+      }
+    },
+    {
+      "sequence": 8,
+      "observation_id": "gripper_mounted_for_collection",
+      "source": "simulated_robot_feedback",
+      "note": "Robot feedback confirms the collection gripper is mounted.",
+      "updates": {
+        "robot": {
+          "mounted_tool": "parallel_gripper"
+        }
+      }
+    },
+    {
+      "sequence": 9,
+      "observation_id": "rotor_collection_confirmed",
+      "source": "simulated_camera",
+      "note": "The final observation confirms collection of the rotor.",
+      "updates": {
+        "components": {
+          "rotor": {
+            "status": "collected"
+          }
+        }
+      }
+    }
+  ]
+}

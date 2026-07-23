@@ -1,0 +1,95 @@
+{
+  "test_case": {
+    "id": "motor_case_04_retaining_ring",
+    "title": "Retaining-ring motor cover",
+    "situation": "A retaining ring secures the accessible cover to the housing.",
+    "test_focus": "Checks reuse of release_retainer with a second retaining-connection type and a different tool.",
+    "expected_outcome": "success",
+    "required_action_templates": [
+      "release_retainer",
+      "remove_component",
+      "pull_component",
+      "collect_component"
+    ]
+  },
+  "schema_version": "2.0",
+  "assembly": {
+    "id": "motor_case_04_retaining_ring",
+    "type": "simplified_motor"
+  },
+  "components": {
+    "housing": {
+      "type": "housing",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "end_cover": {
+      "type": "cover",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "rotor": {
+      "type": "rotor",
+      "status": "installed",
+      "accessible": false,
+      "blocked_by": [
+        "end_cover"
+      ],
+      "target": true
+    }
+  },
+  "connections": {
+    "cover_retaining_ring": {
+      "type": "retaining_ring",
+      "connects": [
+        "end_cover",
+        "housing"
+      ],
+      "retaining": true,
+      "status": "installed",
+      "accessible": true
+    }
+  },
+  "tools": {
+    "inspection_camera": {
+      "type": "sensor",
+      "capabilities": [
+        "inspect"
+      ],
+      "available": true
+    },
+    "parallel_gripper": {
+      "type": "gripper",
+      "capabilities": [
+        "grasp_and_remove",
+        "grasp_and_place"
+      ],
+      "available": true
+    },
+    "rotor_puller": {
+      "type": "puller",
+      "capabilities": [
+        "pull"
+      ],
+      "component_types": [
+        "rotor"
+      ],
+      "available": true
+    },
+    "retaining_ring_pliers": {
+      "type": "hand_tool",
+      "capabilities": [
+        "release_retainer"
+      ],
+      "available": true,
+      "connection_types": [
+        "retaining_ring"
+      ]
+    }
+  },
+  "robot": {
+    "mounted_tool": "inspection_camera"
+  }
+}

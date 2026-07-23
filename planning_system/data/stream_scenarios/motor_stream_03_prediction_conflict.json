@@ -1,0 +1,147 @@
+{
+  "test_case": {
+    "title": "Observed fastener conflicts with the prediction",
+    "situation": "A later frame reports the fastener still installed after predicted removal.",
+    "expected_outcome": "expected_failure"
+  },
+  "stream_schema_version": "1.0",
+  "name": "motor_stream_03_prediction_conflict",
+  "expected_success": false,
+  "action_library": "../generic_disassembly_action_library.json",
+  "initial_state": {
+    "schema_version": "2.0",
+    "assembly": {
+      "id": "motor_stream_03_prediction_conflict",
+      "type": "simplified_pmsm_motor"
+    },
+    "components": {
+      "housing": {
+        "type": "housing",
+        "status": "installed",
+        "accessible": true,
+        "target": false
+      }
+    },
+    "connections": {},
+    "tools": {
+      "inspection_camera": {
+        "type": "sensor",
+        "capabilities": [
+          "inspect"
+        ],
+        "available": true
+      },
+      "hex_driver_m4": {
+        "type": "driver",
+        "capabilities": [
+          "unscrew"
+        ],
+        "thread_sizes": [
+          "M4"
+        ],
+        "drive_types": [
+          "hex"
+        ],
+        "available": true
+      },
+      "phillips_driver_m3": {
+        "type": "driver",
+        "capabilities": [
+          "unscrew"
+        ],
+        "thread_sizes": [
+          "M3"
+        ],
+        "drive_types": [
+          "phillips"
+        ],
+        "available": true
+      },
+      "parallel_gripper": {
+        "type": "gripper",
+        "capabilities": [
+          "grasp_and_remove",
+          "grasp_and_place"
+        ],
+        "available": true
+      },
+      "rotor_puller": {
+        "type": "puller",
+        "capabilities": [
+          "pull"
+        ],
+        "component_types": [
+          "rotor"
+        ],
+        "available": true
+      }
+    },
+    "robot": {
+      "mounted_tool": "inspection_camera"
+    }
+  },
+  "goal": {
+    "components": {
+      "rotor": {
+        "status": "collected"
+      }
+    }
+  },
+  "observation_stream": [
+    {
+      "sequence": 1,
+      "observation_id": "observation_001",
+      "source": "simulated_camera",
+      "note": "The first observation contains only the external end cover and its visible fasteners.",
+      "updates": {
+        "components": {
+          "end_cover": {
+            "type": "cover",
+            "status": "installed",
+            "accessible": true,
+            "target": false
+          }
+        },
+        "connections": {
+          "end_cover_screws": {
+            "type": "threaded_fastener",
+            "connects": [
+              "end_cover",
+              "housing"
+            ],
+            "retaining": true,
+            "quantity": 4,
+            "thread_size": "M4",
+            "drive_type": "hex",
+            "status": "installed",
+            "accessible": true
+          }
+        }
+      }
+    },
+    {
+      "sequence": 2,
+      "observation_id": "observation_002",
+      "source": "simulated_robot_feedback",
+      "note": "M4 hex driver mounting is confirmed.",
+      "updates": {
+        "robot": {
+          "mounted_tool": "hex_driver_m4"
+        }
+      }
+    },
+    {
+      "sequence": 3,
+      "observation_id": "observation_003_conflict",
+      "source": "simulated_camera",
+      "note": "The fastener is still observed as installed, contrary to the predicted removal effect.",
+      "updates": {
+        "connections": {
+          "end_cover_screws": {
+            "status": "installed"
+          }
+        }
+      }
+    }
+  ]
+}

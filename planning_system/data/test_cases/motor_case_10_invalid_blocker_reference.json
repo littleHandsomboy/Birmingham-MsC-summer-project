@@ -1,0 +1,69 @@
+{
+  "test_case": {
+    "id": "motor_case_10_invalid_blocker_reference",
+    "title": "Invalid assembly-state reference",
+    "situation": "The rotor blocked_by field refers to a component that is not present in the motor state.",
+    "test_focus": "Checks input validation and explicit rejection of structurally inconsistent JSON.",
+    "expected_outcome": "input_error",
+    "required_action_templates": []
+  },
+  "schema_version": "2.0",
+  "assembly": {
+    "id": "motor_case_10_invalid_blocker_reference",
+    "type": "simplified_motor"
+  },
+  "components": {
+    "housing": {
+      "type": "housing",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "end_cover": {
+      "type": "cover",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "rotor": {
+      "type": "rotor",
+      "status": "installed",
+      "accessible": false,
+      "blocked_by": [
+        "missing_internal_cover"
+      ],
+      "target": true
+    }
+  },
+  "connections": {},
+  "tools": {
+    "inspection_camera": {
+      "type": "sensor",
+      "capabilities": [
+        "inspect"
+      ],
+      "available": true
+    },
+    "parallel_gripper": {
+      "type": "gripper",
+      "capabilities": [
+        "grasp_and_remove",
+        "grasp_and_place"
+      ],
+      "available": true
+    },
+    "rotor_puller": {
+      "type": "puller",
+      "capabilities": [
+        "pull"
+      ],
+      "component_types": [
+        "rotor"
+      ],
+      "available": true
+    }
+  },
+  "robot": {
+    "mounted_tool": "inspection_camera"
+  }
+}

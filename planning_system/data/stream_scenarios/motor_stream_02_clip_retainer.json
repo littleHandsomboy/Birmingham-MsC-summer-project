@@ -1,0 +1,142 @@
+{
+  "test_case": {
+    "title": "Clip-retained end cover",
+    "situation": "A reusable retainer-release action must precede cover removal.",
+    "expected_outcome": "success"
+  },
+  "stream_schema_version": "1.0",
+  "name": "motor_stream_02_clip_retainer",
+  "expected_success": true,
+  "action_library": "../generic_disassembly_action_library.json",
+  "initial_state": {
+    "schema_version": "2.0",
+    "assembly": {
+      "id": "motor_stream_02_clip_retainer",
+      "type": "simplified_motor"
+    },
+    "components": {
+      "housing": {
+        "type": "housing",
+        "status": "installed",
+        "accessible": true,
+        "target": false
+      }
+    },
+    "connections": {},
+    "tools": {
+      "inspection_camera": {
+        "type": "sensor",
+        "capabilities": [
+          "inspect"
+        ],
+        "available": true
+      },
+      "clip_release_tool": {
+        "type": "hand_tool",
+        "capabilities": [
+          "release_retainer"
+        ],
+        "connection_types": [
+          "clip"
+        ],
+        "available": true
+      },
+      "parallel_gripper": {
+        "type": "gripper",
+        "capabilities": [
+          "grasp_and_remove"
+        ],
+        "available": true
+      }
+    },
+    "robot": {
+      "mounted_tool": "inspection_camera"
+    }
+  },
+  "goal": {
+    "components": {
+      "end_cover": {
+        "status": "removed"
+      }
+    }
+  },
+  "observation_stream": [
+    {
+      "sequence": 1,
+      "observation_id": "observation_001",
+      "source": "simulated_camera",
+      "updates": {
+        "components": {
+          "end_cover": {
+            "type": "cover",
+            "status": "installed",
+            "accessible": true,
+            "target": false
+          }
+        },
+        "connections": {
+          "end_cover_clip": {
+            "type": "clip",
+            "connects": [
+              "end_cover",
+              "housing"
+            ],
+            "retaining": true,
+            "status": "installed",
+            "accessible": true
+          }
+        }
+      },
+      "note": "A clip-retained end cover is visible."
+    },
+    {
+      "sequence": 2,
+      "observation_id": "observation_002",
+      "source": "simulated_robot_feedback",
+      "updates": {
+        "robot": {
+          "mounted_tool": "clip_release_tool"
+        }
+      },
+      "note": "Clip-release tool mounting is confirmed."
+    },
+    {
+      "sequence": 3,
+      "observation_id": "observation_003",
+      "source": "simulated_camera",
+      "updates": {
+        "connections": {
+          "end_cover_clip": {
+            "status": "removed"
+          }
+        }
+      },
+      "note": "Clip release is confirmed."
+    },
+    {
+      "sequence": 4,
+      "observation_id": "observation_004",
+      "source": "simulated_robot_feedback",
+      "updates": {
+        "robot": {
+          "mounted_tool": "parallel_gripper"
+        }
+      },
+      "note": "Cover gripper mounting is confirmed."
+    },
+    {
+      "sequence": 5,
+      "observation_id": "observation_005",
+      "source": "simulated_camera",
+      "updates": {
+        "components": {
+          "end_cover": {
+            "status": "removed",
+            "accessible": false
+          }
+        }
+      },
+      "note": "Confirms end-cover removal after the final selected action."
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "test_case": {
+    "id": "motor_case_05_adhesive_joint",
+    "title": "Adhesively bonded motor cover",
+    "situation": "The end cover is retained by an accessible adhesive joint.",
+    "test_focus": "Checks debond_joint before cover removal and rotor access.",
+    "expected_outcome": "success",
+    "required_action_templates": [
+      "debond_joint",
+      "remove_component",
+      "pull_component",
+      "collect_component"
+    ]
+  },
+  "schema_version": "2.0",
+  "assembly": {
+    "id": "motor_case_05_adhesive_joint",
+    "type": "simplified_motor"
+  },
+  "components": {
+    "housing": {
+      "type": "housing",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "end_cover": {
+      "type": "cover",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "rotor": {
+      "type": "rotor",
+      "status": "installed",
+      "accessible": false,
+      "blocked_by": [
+        "end_cover"
+      ],
+      "target": true
+    }
+  },
+  "connections": {
+    "cover_adhesive": {
+      "type": "adhesive_joint",
+      "connects": [
+        "end_cover",
+        "housing"
+      ],
+      "retaining": true,
+      "status": "installed",
+      "accessible": true
+    }
+  },
+  "tools": {
+    "inspection_camera": {
+      "type": "sensor",
+      "capabilities": [
+        "inspect"
+      ],
+      "available": true
+    },
+    "parallel_gripper": {
+      "type": "gripper",
+      "capabilities": [
+        "grasp_and_remove",
+        "grasp_and_place"
+      ],
+      "available": true
+    },
+    "rotor_puller": {
+      "type": "puller",
+      "capabilities": [
+        "pull"
+      ],
+      "component_types": [
+        "rotor"
+      ],
+      "available": true
+    },
+    "controlled_heat_tool": {
+      "type": "thermal_tool",
+      "capabilities": [
+        "debond"
+      ],
+      "available": true
+    }
+  },
+  "robot": {
+    "mounted_tool": "inspection_camera"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "test_case": {
+    "id": "motor_case_06_electrical_connector",
+    "title": "Cover blocked by an electrical connector",
+    "situation": "An installed electrical connector must be disconnected before the cover can be removed.",
+    "test_focus": "Checks disconnect_connection and explicit retaining metadata.",
+    "expected_outcome": "success",
+    "required_action_templates": [
+      "disconnect_connection",
+      "remove_component",
+      "pull_component",
+      "collect_component"
+    ]
+  },
+  "schema_version": "2.0",
+  "assembly": {
+    "id": "motor_case_06_electrical_connector",
+    "type": "simplified_motor"
+  },
+  "components": {
+    "housing": {
+      "type": "housing",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "end_cover": {
+      "type": "cover",
+      "status": "installed",
+      "accessible": true,
+      "target": false
+    },
+    "rotor": {
+      "type": "rotor",
+      "status": "installed",
+      "accessible": false,
+      "blocked_by": [
+        "end_cover"
+      ],
+      "target": true
+    }
+  },
+  "connections": {
+    "cover_connector": {
+      "type": "electrical_connector",
+      "connects": [
+        "end_cover",
+        "housing"
+      ],
+      "retaining": true,
+      "status": "installed",
+      "accessible": true
+    }
+  },
+  "tools": {
+    "inspection_camera": {
+      "type": "sensor",
+      "capabilities": [
+        "inspect"
+      ],
+      "available": true
+    },
+    "parallel_gripper": {
+      "type": "gripper",
+      "capabilities": [
+        "grasp_and_remove",
+        "grasp_and_place"
+      ],
+      "available": true
+    },
+    "rotor_puller": {
+      "type": "puller",
+      "capabilities": [
+        "pull"
+      ],
+      "component_types": [
+        "rotor"
+      ],
+      "available": true
+    },
+    "connector_release_tool": {
+      "type": "hand_tool",
+      "capabilities": [
+        "disconnect"
+      ],
+      "available": true,
+      "connection_types": [
+        "electrical_connector"
+      ]
+    }
+  },
+  "robot": {
+    "mounted_tool": "inspection_camera"
+  }
+}

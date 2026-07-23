@@ -1,0 +1,99 @@
+{
+  "test_case": {
+    "title": "No visible planning frontier",
+    "situation": "The observation contains no removable component or connection.",
+    "expected_outcome": "expected_failure"
+  },
+  "stream_schema_version": "1.0",
+  "name": "motor_stream_05_no_visible_frontier",
+  "expected_success": false,
+  "action_library": "../generic_disassembly_action_library.json",
+  "initial_state": {
+    "schema_version": "2.0",
+    "assembly": {
+      "id": "motor_stream_05_no_visible_frontier",
+      "type": "simplified_pmsm_motor"
+    },
+    "components": {
+      "housing": {
+        "type": "housing",
+        "status": "installed",
+        "accessible": true,
+        "target": false
+      }
+    },
+    "connections": {},
+    "tools": {
+      "inspection_camera": {
+        "type": "sensor",
+        "capabilities": [
+          "inspect"
+        ],
+        "available": true
+      },
+      "hex_driver_m4": {
+        "type": "driver",
+        "capabilities": [
+          "unscrew"
+        ],
+        "thread_sizes": [
+          "M4"
+        ],
+        "drive_types": [
+          "hex"
+        ],
+        "available": true
+      },
+      "phillips_driver_m3": {
+        "type": "driver",
+        "capabilities": [
+          "unscrew"
+        ],
+        "thread_sizes": [
+          "M3"
+        ],
+        "drive_types": [
+          "phillips"
+        ],
+        "available": true
+      },
+      "parallel_gripper": {
+        "type": "gripper",
+        "capabilities": [
+          "grasp_and_remove",
+          "grasp_and_place"
+        ],
+        "available": true
+      },
+      "rotor_puller": {
+        "type": "puller",
+        "capabilities": [
+          "pull"
+        ],
+        "component_types": [
+          "rotor"
+        ],
+        "available": true
+      }
+    },
+    "robot": {
+      "mounted_tool": "inspection_camera"
+    }
+  },
+  "goal": {
+    "components": {
+      "rotor": {
+        "status": "collected"
+      }
+    }
+  },
+  "observation_stream": [
+    {
+      "sequence": 1,
+      "observation_id": "observation_001_empty",
+      "source": "simulated_camera",
+      "note": "No removable component, connection or target is visible.",
+      "updates": {}
+    }
+  ]
+}

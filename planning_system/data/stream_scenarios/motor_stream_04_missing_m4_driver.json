@@ -1,0 +1,128 @@
+{
+  "test_case": {
+    "title": "Compatible driver unavailable",
+    "situation": "The visible M4 hex fastener cannot be removed with the available tools.",
+    "expected_outcome": "expected_failure"
+  },
+  "stream_schema_version": "1.0",
+  "name": "motor_stream_04_missing_m4_driver",
+  "expected_success": false,
+  "action_library": "../generic_disassembly_action_library.json",
+  "initial_state": {
+    "schema_version": "2.0",
+    "assembly": {
+      "id": "motor_stream_04_missing_m4_driver",
+      "type": "simplified_pmsm_motor"
+    },
+    "components": {
+      "housing": {
+        "type": "housing",
+        "status": "installed",
+        "accessible": true,
+        "target": false
+      }
+    },
+    "connections": {},
+    "tools": {
+      "inspection_camera": {
+        "type": "sensor",
+        "capabilities": [
+          "inspect"
+        ],
+        "available": true
+      },
+      "hex_driver_m4": {
+        "type": "driver",
+        "capabilities": [
+          "unscrew"
+        ],
+        "thread_sizes": [
+          "M4"
+        ],
+        "drive_types": [
+          "hex"
+        ],
+        "available": true
+      },
+      "phillips_driver_m3": {
+        "type": "driver",
+        "capabilities": [
+          "unscrew"
+        ],
+        "thread_sizes": [
+          "M3"
+        ],
+        "drive_types": [
+          "phillips"
+        ],
+        "available": true
+      },
+      "parallel_gripper": {
+        "type": "gripper",
+        "capabilities": [
+          "grasp_and_remove",
+          "grasp_and_place"
+        ],
+        "available": true
+      },
+      "rotor_puller": {
+        "type": "puller",
+        "capabilities": [
+          "pull"
+        ],
+        "component_types": [
+          "rotor"
+        ],
+        "available": true
+      }
+    },
+    "robot": {
+      "mounted_tool": "inspection_camera"
+    }
+  },
+  "goal": {
+    "components": {
+      "rotor": {
+        "status": "collected"
+      }
+    }
+  },
+  "observation_stream": [
+    {
+      "sequence": 1,
+      "observation_id": "observation_001",
+      "source": "simulated_camera_and_tool_registry",
+      "updates": {
+        "components": {
+          "end_cover": {
+            "type": "cover",
+            "status": "installed",
+            "accessible": true,
+            "target": false
+          }
+        },
+        "connections": {
+          "end_cover_screws": {
+            "type": "threaded_fastener",
+            "connects": [
+              "end_cover",
+              "housing"
+            ],
+            "retaining": true,
+            "quantity": 4,
+            "thread_size": "M4",
+            "drive_type": "hex",
+            "status": "installed",
+            "accessible": true
+          }
+        },
+        "tools": {
+          "hex_driver_m4": {
+            "available": false
+          }
+        }
+      },
+      "note": "The required M4 hex driver is reported unavailable."
+    }
+  ]
+}
